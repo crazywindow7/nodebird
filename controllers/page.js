@@ -66,9 +66,8 @@ exports.renderUserPost = async (req, res, next) => {
 
 exports.renderHashtag = async (req, res, next) => {
     const query = req.query.hashtag;
-    logger.info('쿼리:', query);
     if(!query){
-        res.redirect('/');
+        return res.redirect('/');
     }
     try {
         const hashtag = await Hashtag.findOne({ where: {title: query} });
