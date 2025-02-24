@@ -2,6 +2,7 @@ const { where } = require('sequelize');
 const Hashtag = require('../models/hashtag');
 const Post = require('../models/post');
 const User = require('../models/user');
+const logger = require('../logger');
 
 exports.renderProfile = (req, res, next) => {
     // 서비스 호출
@@ -65,6 +66,7 @@ exports.renderUserPost = async (req, res, next) => {
 
 exports.renderHashtag = async (req, res, next) => {
     const query = req.query.hashtag;
+    logger.info('쿼리:', query);
     if(!query){
         res.redirect('/');
     }

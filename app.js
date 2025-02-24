@@ -20,7 +20,6 @@ const redisClient = redis.createClient({
 });
 redisClient.connect().catch(console.error);
 
-
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
