@@ -16,7 +16,7 @@ const { sequelize } = require('./models');
 dotenv.config(); //env 파일 리딩 후 process.env에 저장
 const redisClient = redis.createClient({
     url: `redis://${process.env.REDIS_URL}`,
-    password: process.env.REDIS_PASSWORD,
+    password: process.env.PASSWORD,
 });
 redisClient.connect().catch(console.error);
 
