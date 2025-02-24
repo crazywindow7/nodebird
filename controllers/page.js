@@ -26,7 +26,7 @@ exports.renderMain = async (req, res, next) => {
                   attributes: ['id'],
                   as: 'Likeds', // 좋아요를 누른 유저와 연결된 관계
                 },
-              ],
+            ],
             order: [['createdAt','DESC']]
         });
         
@@ -48,10 +48,17 @@ exports.renderUserPost = async (req, res, next) => {
             where: {
                 userId: userId
             },
-            include: {
-                model: User,
-                attributes: ['id','nick']
-            },
+            include: [
+                {
+                  model: User,
+                  attributes: ['id', 'nick'], // 작성자와 연결된 관계
+                },
+                {
+                  model: User,
+                  attributes: ['id'],
+                  as: 'Likeds', // 좋아요를 누른 유저와 연결된 관계
+                },
+            ],
             order: [['createdAt','DESC']]
         })
         res.render('main', {
@@ -74,10 +81,17 @@ exports.renderHashtag = async (req, res, next) => {
         let posts = [];
         if(hashtag){
             posts = await hashtag.getPosts({
-                include: [{
-                    model: User,
-                    attributes: ['id', 'nick'],
-                }],
+                include: [
+                    {
+                      model: User,
+                      attributes: ['id', 'nick'], // 작성자와 연결된 관계
+                    },
+                    {
+                      model: User,
+                      attributes: ['id'],
+                      as: 'Likeds', // 좋아요를 누른 유저와 연결된 관계
+                    },
+                ],
                 order: [['createdAt', 'DESC']],
             });
         }
