@@ -5,6 +5,8 @@ const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 const { afterUploadImage, uploadPost, deletePost } = require('../controllers/post');
+const { S3Client } = require('@aws-sdk/client-s3');
+const multerS3 = require('multer-s3');
 
 try {
     fs.readdirSync('uploads');
@@ -12,18 +14,23 @@ try {
     fs.mkdirSync('uploads');
 }
 
-const upload = multer({
-    storage: multer.diskStorage({
-        destination(req, file, callback){
-            callback(null, 'uploads/');
-        }, 
-        filename(req, file, callback){
-            const ext = path.extname(file.originalname);
-            callback(null, path.basename(file.originalname, ext) + Date.now() + ext);
-        }
-    }),
-    limits: {fileSize: 5 * 1024 * 1024},
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    },
+    region: 'ap-northeast-2',
+});
 
+const upload = multer({
+    storage: multerS3({
+        s3,
+        bucket: 'nodebirdbuc',
+        key(req, file, cb){
+            cb(null, `original/${Date.now()}_${file.originalname}`);
+        }
+    }), 
+    limits: {fileSize: 5 * 1024 * 1024},
 });
 
 router.post('/img', isLoggedIn, upload.single('img'), afterUploadImage);
