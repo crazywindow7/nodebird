@@ -3,7 +3,10 @@ const Post = require('../models/post');
 
 exports.afterUploadImage = (req, res) => {
     console.log(req.file);
-    res.json({ url: req.file.location });
+    const originalUrl = req.file.location;
+    const url = originalUrl.replace(/\/original\//, '/thumb/'); //  /original/ --> /thumb/
+    const rl = originalUrl.replace(/original/, '/thumb/');
+    res.json({ url, originalUrl });
 };
 
 exports.uploadPost = async (req, res, next) => {

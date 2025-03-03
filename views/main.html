@@ -39,8 +39,10 @@
               <button class="twit-button twit-delete">게시글 삭제</button>
             {% endif %}
               <div class="twit-content">{{twit.content}}</div>
-            {% if twit.img %}
-              <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
+            {% if twit.img %} 
+              <div class="twit-img">
+                <img src="{{twit.img}}" onerror="this.src = this.src.replace(/\/thumb\//, '/original/');" alt="섬네일">
+              </div>
             {% endif %}
             {% if not likedPostIdList.includes(twit.id) %}
               <button class="twit-button twit-like">좋아요</button>
@@ -65,7 +67,7 @@
         axios.post('/post/img', formData)
           .then((res) => {
             document.getElementById('img-url').value = res.data.url;
-            document.getElementById('img-preview').src = res.data.url;
+            document.getElementById('img-preview').src = res.data.originalUrl; //리사이징된 이미지 보여주는 시간 차 고려
             document.getElementById('img-preview').style.display = 'inline';
           })
           .catch((err) => {
